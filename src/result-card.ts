@@ -59,73 +59,126 @@ function supportsDownload(): boolean {
 }
 
 function drawCard(context: CanvasRenderingContext2D, result: QuizResult): void {
-  const accentOnDark =
-    result.profile.accent === "#111111" ? "#fbff35" : result.profile.accent;
+  const pageColor = "#fafaf2";
+  const frameColor = "#f4f4ec";
+  const textColor = "#25292d";
+  const mutedColor = "#4c536a";
+  const neonColor = "#dfff24";
+  const surfaceColor = "#e1e5d5";
+  const accentColor =
+    result.profile.accent === "#111111" ? neonColor : result.profile.accent;
 
-  context.fillStyle = "#f7f1df";
+  context.fillStyle = frameColor;
   context.fillRect(0, 0, cardWidth, cardHeight);
-  context.fillStyle = "#111111";
-  context.fillRect(72, 72, 936, 1776);
-  context.fillStyle = accentOnDark;
-  context.fillRect(120, 136, 520, 108);
-  context.fillStyle = "#ffffff";
-  context.fillRect(680, 136, 280, 108);
 
-  drawText(context, "늙크크 영크크 판독기", 144, 210, 44, "#111111", "900");
+  fillRoundedRect(context, 72, 72, 936, 1776, 42, pageColor);
+  fillRoundedRect(context, 120, 136, 520, 108, 54, neonColor);
+  fillRoundedRect(context, 120, 258, 248, 18, 9, accentColor);
+  fillRoundedRect(context, 680, 136, 280, 108, 54, "#ffffff");
+
+  drawText(context, "늙크크 영크크 판독기", 150, 206, 44, textColor, "900");
   drawText(
     context,
     `${result.score}/${result.maxScore}`,
     718,
     210,
     48,
-    "#111111",
+    textColor,
     "900",
   );
   drawFittedText(
     context,
     result.profile.title,
     120,
-    500,
+    498,
     820,
-    142,
+    148,
     86,
-    "#ffffff",
+    textColor,
     "900",
   );
-  drawText(context, result.profile.badge, 126, 640, 52, "#fbff35", "900");
+  fillRoundedRect(context, 120, 590, 420, 92, 46, neonColor);
+  drawFittedText(
+    context,
+    result.profile.badge,
+    150,
+    650,
+    360,
+    46,
+    34,
+    textColor,
+    "900",
+  );
   wrapText(
     context,
     result.profile.comparison,
     126,
-    805,
-    70,
+    810,
+    76,
     820,
-    58,
-    accentOnDark,
+    62,
+    textColor,
   );
   wrapText(
     context,
     result.profile.description,
     126,
-    980,
+    1000,
     64,
     820,
     48,
-    "#ffffff",
+    mutedColor,
   );
-  wrapText(context, result.profile.taunt, 126, 1320, 68, 820, 54, "#fbff35");
-  drawText(context, "친구 결과가 더 궁금하면", 126, 1640, 44, "#ffffff", "700");
+  wrapText(context, result.profile.taunt, 126, 1328, 68, 820, 54, textColor);
+  fillRoundedRect(context, 120, 1560, 820, 178, 44, surfaceColor);
+  drawText(
+    context,
+    "친구 결과가 더 궁금하면",
+    154,
+    1636,
+    42,
+    mutedColor,
+    "800",
+  );
   drawFittedText(
     context,
     window.location.host,
-    126,
-    1710,
-    820,
+    154,
+    1698,
+    752,
     54,
     38,
-    "#ffffff",
+    textColor,
     "900",
   );
+}
+
+function fillRoundedRect(
+  context: CanvasRenderingContext2D,
+  x: number,
+  y: number,
+  width: number,
+  height: number,
+  radius: number,
+  color: string,
+): void {
+  context.fillStyle = color;
+  context.beginPath();
+  context.moveTo(x + radius, y);
+  context.lineTo(x + width - radius, y);
+  context.quadraticCurveTo(x + width, y, x + width, y + radius);
+  context.lineTo(x + width, y + height - radius);
+  context.quadraticCurveTo(
+    x + width,
+    y + height,
+    x + width - radius,
+    y + height,
+  );
+  context.lineTo(x + radius, y + height);
+  context.quadraticCurveTo(x, y + height, x, y + height - radius);
+  context.lineTo(x, y + radius);
+  context.quadraticCurveTo(x, y, x + radius, y);
+  context.fill();
 }
 
 function drawText(
