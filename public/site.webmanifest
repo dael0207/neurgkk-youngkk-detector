@@ -1,0 +1,15 @@
+{
+  "name": "늙크크 영크크 판독기",
+  "short_name": "영크크판독",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#f7f1df",
+  "theme_color": "#fbff35",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "64x64",
+      "type": "image/svg+xml"
+    }
+  ]
+}
