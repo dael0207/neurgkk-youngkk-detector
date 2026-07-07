@@ -9,6 +9,8 @@
 
 body {
   background: #f4f4ec;
+  word-break: keep-all;
+  overflow-wrap: break-word;
 }
 
 .hero,
@@ -49,6 +51,7 @@ h1 {
   color: #25292d;
   font-size: clamp(2.15rem, 10vw, 3.2rem);
   line-height: 1.08;
+  text-wrap: balance;
 }
 
 h2 {
@@ -56,16 +59,18 @@ h2 {
   margin: 38px 0 32px;
   color: #25292d;
   font-size: clamp(1.85rem, 8vw, 2.45rem);
-  line-height: 1.18;
+  line-height: 1.22;
   word-break: keep-all;
+  text-wrap: balance;
 }
 
 .subcopy {
-  max-width: 330px;
+  max-width: 350px;
   margin: 18px 0 28px;
   color: #4c536a;
   font-size: 0.98rem;
-  line-height: 1.58;
+  line-height: 1.66;
+  text-wrap: pretty;
 }
 
 .primary-action,
@@ -150,6 +155,7 @@ h2 {
   font-size: 0.95rem;
   line-height: 1.35;
   text-align: left;
+  text-wrap: pretty;
 }
 
 .choice-button:hover {
@@ -195,13 +201,16 @@ h2 {
 .taunt {
   color: #25292d;
   font-size: 1.13rem;
-  line-height: 1.42;
+  line-height: 1.5;
   font-weight: 900;
+  text-wrap: pretty;
 }
 
 .description {
   color: #454c63;
   font-size: 0.98rem;
+  line-height: 1.68;
+  text-wrap: pretty;
 }
 
 .action-grid {
@@ -219,6 +228,8 @@ h2 {
 .toast {
   color: #4c536a;
   font-size: 0.9rem;
+  line-height: 1.6;
+  text-wrap: pretty;
 }
 
 .ad-placeholder {
