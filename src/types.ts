@@ -47,6 +47,7 @@ export type SharePayload = {
 export type TrackEventName =
   | "quiz_start"
   | "quiz_answer"
+  | "quiz_timeout"
   | "quiz_complete"
   | "result_view"
   | "share_web_click"

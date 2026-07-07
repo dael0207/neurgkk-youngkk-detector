@@ -30,6 +30,16 @@ describe("content contract", () => {
     expect(Math.max(...positionCounts.values())).toBeLessThanOrEqual(4);
   });
 
+  it("Given quiz answer choices When loaded Then every question has a plausible high-score distractor", () => {
+    for (const question of quizQuestions) {
+      const secondBestChoices = question.choices.filter(
+        (choice) => choice.points === 3,
+      );
+
+      expect(secondBestChoices).toHaveLength(1);
+    }
+  });
+
   it("Given result content When loaded Then it exposes five result grades and share copy", () => {
     expect(resultProfiles).toHaveLength(5);
     expect(shareCopies.length).toBeGreaterThanOrEqual(10);

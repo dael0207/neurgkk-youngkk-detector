@@ -1,16 +1,11 @@
 import { trackEvent } from "./analytics";
 import { assertNever, escapeHtml, mustElement } from "./dom";
 import { quizQuestions } from "./quiz-data";
-import { saveResultCard } from "./result-card";
+import { bindResultEvents } from "./result-actions";
 import { buildResult, findChoice } from "./scoring";
-import {
-  copyLink,
-  createSharePayload,
-  shareViaKakao,
-  shareViaSystem,
-} from "./share";
 import "./styles.css";
 import "./soft-theme.css";
+import "./quiz-timer.css";
 import type { QuizAnswer, QuizQuestion, QuizResult } from "./types";
 
 type ViewState =
@@ -22,12 +17,15 @@ type ViewState =
     }
   | { readonly screen: "result"; readonly result: QuizResult };
 
+const questionTimeLimitSeconds = 8;
 const app = mustElement(document, "#app", HTMLElement);
 let state: ViewState = { screen: "landing" };
+let quizTimerId: number | undefined;
 
 render();
 
 function render(): void {
+  clearQuizTimer();
   switch (state.screen) {
     case "landing":
       renderLanding();
@@ -49,8 +47,8 @@ function renderLanding(): void {
       <div class="hero-copy">
         <p class="eyebrow">12문항 밈 감각 테스트</p>
         <h1>너 알고리즘<br />몇 년도에<br />멈췄냐?</h1>
-        <p class="subcopy">요즘 밈을 진짜 아는지, 아는 척만 하는지 30초 안에 영크크 지수로 확인.</p>
-        <button class="primary-action" data-action="start">30초 판독 시작</button>
+        <p class="subcopy">각 문제 8초. 요즘 밈을 진짜 아는지, 아는 척만 하는지 영크크 지수로 확인.</p>
+        <button class="primary-action" data-action="start">8초 제한 판독 시작</button>
       </div>
       <div class="sample-result" aria-label="결과 카드 미리보기">
         <span>예상 결과</span>
@@ -84,10 +82,16 @@ function renderQuiz(index: number, answers: readonly QuizAnswer[]): void {
     <section class="quiz-shell">
       <header class="quiz-header">
         <button class="ghost-action" data-action="back" ${index === 0 ? "disabled" : ""}>이전</button>
-        <span>${index + 1} / ${quizQuestions.length}</span>
+        <div class="quiz-status">
+          <strong>${questionTimeLimitSeconds}초</strong>
+          <span>${index + 1} / ${quizQuestions.length}</span>
+        </div>
       </header>
       <div class="progress" aria-label="진행률">
         <span style="width: ${progressPercent}%"></span>
+      </div>
+      <div class="timer-meter" aria-label="문항 제한 시간">
+        <span style="animation-duration: ${questionTimeLimitSeconds}s"></span>
       </div>
       <h2>${escapeHtml(question.question)}</h2>
       <div class="choice-list">
@@ -103,7 +107,33 @@ function renderQuiz(index: number, answers: readonly QuizAnswer[]): void {
       </div>
     </section>
   `;
+  startQuestionTimer(question, index, answers);
   bindQuizEvents(question, index, answers);
+}
+
+function clearQuizTimer(): void {
+  if (quizTimerId === undefined) {
+    return;
+  }
+
+  window.clearTimeout(quizTimerId);
+  quizTimerId = undefined;
+}
+
+function startQuestionTimer(
+  question: QuizQuestion,
+  index: number,
+  answers: readonly QuizAnswer[],
+): void {
+  quizTimerId = window.setTimeout(() => {
+    if (state.screen !== "quiz" || state.index !== index) {
+      return;
+    }
+
+    trackEvent("quiz_timeout", { question: question.id });
+    state = { screen: "quiz", index: index + 1, answers };
+    render();
+  }, questionTimeLimitSeconds * 1000);
 }
 
 function bindQuizEvents(
@@ -158,7 +188,6 @@ function bindQuizEvents(
 }
 
 function renderResult(result: QuizResult): void {
-  const payload = createSharePayload(result);
   trackEvent("result_view", {
     grade: result.profile.grade,
     score: result.score,
@@ -188,73 +217,8 @@ function renderResult(result: QuizResult): void {
     </section>
   `;
   trackEvent("ad_slot_view", { status: "disabled" });
-  bindResultEvents(result, payload);
-}
-
-function bindResultEvents(
-  result: QuizResult,
-  payload: ReturnType<typeof createSharePayload>,
-): void {
-  const toast = mustElement(app, "#toast", HTMLElement);
-  mustElement(app, "[data-action='save']", HTMLButtonElement).addEventListener(
-    "click",
-    () => {
-      void saveResultCard(result).then((status) => {
-        if (status === "saved") {
-          toast.textContent = "결과 이미지를 저장했어요.";
-          return;
-        }
-        toast.textContent =
-          status === "opened"
-            ? "새 탭에서 이미지를 길게 눌러 저장하세요."
-            : "이 브라우저에서는 저장을 지원하지 않아요.";
-      });
-    },
-  );
-  mustElement(
-    app,
-    "[data-action='system-share']",
-    HTMLButtonElement,
-  ).addEventListener("click", () => {
-    void shareViaSystem(payload).then((result) => {
-      const messages: Record<typeof result, string> = {
-        shared: "공유창을 열었어요.",
-        copied: "공유 미지원이라 링크를 복사했어요.",
-        manual: "공유/복사가 막혔어요. 주소창 링크를 직접 복사해주세요.",
-        cancelled: "공유를 취소했어요. 링크 복사도 사용할 수 있어요.",
-      };
-      toast.textContent = messages[result];
-    });
+  bindResultEvents(app, result, () => {
+    state = { screen: "landing" };
+    render();
   });
-  mustElement(app, "[data-action='copy']", HTMLButtonElement).addEventListener(
-    "click",
-    () => {
-      void copyLink(payload).then((result) => {
-        toast.textContent =
-          result === "copied"
-            ? "링크를 복사했어요."
-            : "자동 복사가 막혔어요. 주소창 링크를 직접 복사해주세요.";
-      });
-    },
-  );
-  mustElement(app, "[data-action='kakao']", HTMLButtonElement).addEventListener(
-    "click",
-    () => {
-      const result = shareViaKakao(payload);
-      const messages: Record<typeof result, string> = {
-        sent: "카카오톡 공유창을 열었어요.",
-        unavailable: "Kakao JavaScript 키와 도메인 등록 후 활성화됩니다.",
-        failed: "Kakao 설정을 확인해주세요. 지금은 링크 복사를 사용하세요.",
-      };
-      toast.textContent = messages[result];
-    },
-  );
-  mustElement(app, "[data-action='retry']", HTMLButtonElement).addEventListener(
-    "click",
-    () => {
-      trackEvent("retry_click");
-      state = { screen: "landing" };
-      render();
-    },
-  );
 }
