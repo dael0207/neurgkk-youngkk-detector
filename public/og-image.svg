@@ -1,13 +1,14 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" role="img" aria-labelledby="og-title">
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" role="img" aria-labelledby="og-title og-desc">
   <title id="og-title">늙크크 영크크 판독기 공유 이미지</title>
-  <rect width="1200" height="630" fill="#f7f1df" />
-  <rect x="70" y="70" width="1060" height="490" rx="24" fill="#111111" />
-  <rect x="110" y="110" width="360" height="76" fill="#fbff35" />
-  <text x="130" y="165" font-family="Arial, sans-serif" font-size="44" font-weight="900" fill="#111111">늙크크</text>
-  <rect x="610" y="110" width="390" height="76" fill="#2f66ff" />
-  <text x="635" y="165" font-family="Arial, sans-serif" font-size="44" font-weight="900" fill="#ffffff">영크크</text>
-  <text x="110" y="292" font-family="Arial, sans-serif" font-size="74" font-weight="900" fill="#ffffff">너 웃음 코드</text>
-  <text x="110" y="382" font-family="Arial, sans-serif" font-size="74" font-weight="900" fill="#ffffff">몇 년도에 멈췄냐?</text>
-  <rect x="110" y="440" width="470" height="62" fill="#ff4b24" />
-  <text x="138" y="482" font-family="Arial, sans-serif" font-size="30" font-weight="800" fill="#ffffff">12문제 밈 나이 판독</text>
+  <desc id="og-desc">굵은 늙 글자 뒤로 형광색 그림자가 오른쪽 아래에 보이는 공유 썸네일</desc>
+  <rect width="1200" height="630" fill="#fafaf2" />
+  <rect x="58" y="58" width="1084" height="514" rx="42" fill="#f4f4ec" />
+  <rect x="92" y="92" width="310" height="72" rx="36" fill="#dfff24" />
+  <text x="126" y="141" fill="#25292d" font-family="Pretendard, Apple SD Gothic Neo, Noto Sans KR, Arial, sans-serif" font-size="34" font-weight="900">늙크크 영크크 판독기</text>
+  <text x="206" y="514" fill="#dfff24" font-family="Pretendard, Apple SD Gothic Neo, Noto Sans KR, Arial Black, sans-serif" font-size="430" font-weight="950" letter-spacing="-18">늙</text>
+  <text x="186" y="494" fill="#25292d" font-family="Pretendard, Apple SD Gothic Neo, Noto Sans KR, Arial Black, sans-serif" font-size="430" font-weight="950" letter-spacing="-18">늙</text>
+  <text x="690" y="318" fill="#25292d" font-family="Pretendard, Apple SD Gothic Neo, Noto Sans KR, Arial, sans-serif" font-size="68" font-weight="950">너 알고리즘</text>
+  <text x="690" y="398" fill="#25292d" font-family="Pretendard, Apple SD Gothic Neo, Noto Sans KR, Arial, sans-serif" font-size="68" font-weight="950">몇 년도에 멈췄냐?</text>
+  <text x="694" y="468" fill="#4c536a" font-family="Pretendard, Apple SD Gothic Neo, Noto Sans KR, Arial, sans-serif" font-size="34" font-weight="900">12문항 밈 감각 테스트</text>
+  <rect x="694" y="504" width="238" height="16" rx="8" fill="#dfff24" />
 </svg>

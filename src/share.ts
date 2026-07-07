@@ -1,6 +1,8 @@
 import { trackEvent } from "./analytics";
 import type { QuizResult, SharePayload } from "./types";
 
+const SHARE_IMAGE_PATH = "/og-image.png";
+
 type KakaoShareOptions = {
   readonly objectType: "feed";
   readonly content: {
@@ -108,7 +110,7 @@ export function shareViaKakao(payload: SharePayload): KakaoShareResult {
       content: {
         title: payload.title,
         description: payload.text,
-        imageUrl: new URL("/og-image.svg", window.location.origin).toString(),
+        imageUrl: new URL(SHARE_IMAGE_PATH, window.location.origin).toString(),
         link: {
           mobileWebUrl: payload.url,
           webUrl: payload.url,

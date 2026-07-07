@@ -73,4 +73,31 @@ describe("share fallback behavior", () => {
   it("Given Kakao is unconfigured When sharing Then it reports unavailable", () => {
     expect(shareViaKakao(payload)).toBe("unavailable");
   });
+
+  it("Given Kakao is configured When sharing Then it uses the PNG preview image", () => {
+    const sendDefault = vi.fn<() => void>();
+    Object.defineProperty(window, "NEURGKK_KAKAO_KEY", {
+      value: "test-key",
+      configurable: true,
+    });
+    Object.defineProperty(window, "Kakao", {
+      value: {
+        isInitialized: () => true,
+        init: vi.fn<() => void>(),
+        Share: {
+          sendDefault,
+        },
+      },
+      configurable: true,
+    });
+
+    expect(shareViaKakao(payload)).toBe("sent");
+    expect(sendDefault).toHaveBeenCalledWith(
+      expect.objectContaining({
+        content: expect.objectContaining({
+          imageUrl: "http://localhost:3000/og-image.png",
+        }),
+      }),
+    );
+  });
 });
