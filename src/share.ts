@@ -1,7 +1,7 @@
 import { trackEvent } from "./analytics";
 import type { QuizResult, SharePayload } from "./types";
 
-const SHARE_IMAGE_PATH = "/og-image.png";
+const SHARE_IMAGE_PATH = "/og-neulg.png";
 
 type KakaoShareOptions = {
   readonly objectType: "feed";
