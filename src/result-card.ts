@@ -59,11 +59,14 @@ function supportsDownload(): boolean {
 }
 
 function drawCard(context: CanvasRenderingContext2D, result: QuizResult): void {
+  const accentOnDark =
+    result.profile.accent === "#111111" ? "#fbff35" : result.profile.accent;
+
   context.fillStyle = "#f7f1df";
   context.fillRect(0, 0, cardWidth, cardHeight);
   context.fillStyle = "#111111";
   context.fillRect(72, 72, 936, 1776);
-  context.fillStyle = result.profile.accent;
+  context.fillStyle = accentOnDark;
   context.fillRect(120, 136, 520, 108);
   context.fillStyle = "#ffffff";
   context.fillRect(680, 136, 280, 108);
@@ -78,16 +81,27 @@ function drawCard(context: CanvasRenderingContext2D, result: QuizResult): void {
     "#111111",
     "900",
   );
-  drawText(context, result.profile.title, 120, 500, 142, "#ffffff", "900");
+  drawFittedText(
+    context,
+    result.profile.title,
+    120,
+    500,
+    820,
+    142,
+    86,
+    "#ffffff",
+    "900",
+  );
   drawText(context, result.profile.badge, 126, 640, 52, "#fbff35", "900");
-  drawText(
+  wrapText(
     context,
     result.profile.comparison,
     126,
     805,
+    70,
+    820,
     58,
-    result.profile.accent,
-    "900",
+    accentOnDark,
   );
   wrapText(
     context,
@@ -101,7 +115,17 @@ function drawCard(context: CanvasRenderingContext2D, result: QuizResult): void {
   );
   wrapText(context, result.profile.taunt, 126, 1320, 68, 820, 54, "#fbff35");
   drawText(context, "친구 결과가 더 궁금하면", 126, 1640, 44, "#ffffff", "700");
-  drawText(context, "neurgkk.netlify.app", 126, 1710, 54, "#ffffff", "900");
+  drawFittedText(
+    context,
+    window.location.host,
+    126,
+    1710,
+    820,
+    54,
+    38,
+    "#ffffff",
+    "900",
+  );
 }
 
 function drawText(
@@ -150,6 +174,29 @@ function wrapText(
   if (line.length > 0) {
     context.fillText(line, x, nextY);
   }
+}
+
+function drawFittedText(
+  context: CanvasRenderingContext2D,
+  value: string,
+  x: number,
+  y: number,
+  maxWidth: number,
+  maxSize: number,
+  minSize: number,
+  color: string,
+  weight: string,
+): void {
+  let size = maxSize;
+  context.fillStyle = color;
+  context.font = `${weight} ${size}px Arial, sans-serif`;
+
+  while (context.measureText(value).width > maxWidth && size > minSize) {
+    size -= 2;
+    context.font = `${weight} ${size}px Arial, sans-serif`;
+  }
+
+  context.fillText(value, x, y);
 }
 
 function canvasToBlob(canvas: HTMLCanvasElement): Promise<Blob | null> {
